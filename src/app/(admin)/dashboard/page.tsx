@@ -1,4 +1,3 @@
-// src/app/(admin)/dashboard/page.tsx
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

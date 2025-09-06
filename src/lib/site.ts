@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
   tagline: "Tu tienda de pádel profesional",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   nav: [
-    { label: "Tienda", href: "/" },
+    { label: "Tienda", href: "/productos" },
     { label: "About us", href: "/about" },
     { label: "Admin", href: "/dashboard" },
   ] as const,

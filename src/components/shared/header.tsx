@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { siteConfig } from "@/lib/site";
+import { usePathname } from "next/navigation";
+import { ShoppingCart, User, Menu } from "lucide-react";
+
 import { Container } from "@/components/shared/container";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -24,45 +26,103 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShoppingCart, User } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
+import { siteConfig } from "@/lib/site";
+import { cn } from "@/lib/utils";
+
 export function Header() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <Container className="flex h-14 items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          aria-label={siteConfig.name}
-          className="font-semibold tracking-tight"
-        >
-          {siteConfig.name}
-        </Link>
+        {/* Izquierda: Burger (mobile) + Logo */}
+        <div className="flex items-center gap-2">
+          {/* Menú móvil */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Abrir menú"
+                className="md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72">
+              <SheetHeader>
+                <SheetTitle className="text-left">{siteConfig.name}</SheetTitle>
+              </SheetHeader>
 
-        {/* Nav principal */}
-        <NavigationMenu>
-          <NavigationMenuList>
-            {siteConfig.nav.map((item) => (
-              <NavigationMenuItem key={item.href}>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href={item.href}
-                    className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+              <nav aria-label="Principal móvil" className="mt-4 space-y-1">
+                {siteConfig.nav.map((item) => {
+                  const active = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "block rounded-md px-3 py-2 text-sm",
+                        active
+                          ? "bg-accent text-accent-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </SheetContent>
+          </Sheet>
 
-        {/* Acciones derecha */}
+          {/* Logo */}
+          <Link
+            href="/"
+            aria-label={siteConfig.name}
+            className="font-semibold tracking-tight"
+          >
+            {siteConfig.name}
+          </Link>
+        </div>
+
+        {/* Centro: navegación desktop */}
+        <div className="hidden md:block">
+          <NavigationMenu>
+            <NavigationMenuList>
+              {siteConfig.nav.map((item) => {
+                const active = pathname === item.href;
+                return (
+                  <NavigationMenuItem key={item.href}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "px-3 py-2 text-sm",
+                          active
+                            ? "rounded-md bg-accent text-accent-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Derecha: acciones */}
         <div className="flex items-center gap-2">
           <ThemeToggle />
 
-          {/* Carrito (hoja lateral) */}
+          {/* Carrito */}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Abrir carrito">
@@ -74,7 +134,7 @@ export function Header() {
                 <SheetTitle>Carrito</SheetTitle>
               </SheetHeader>
               <div className="py-4 text-sm text-muted-foreground">
-                Tu carrito está vacío. {/* Día 8+: contenido real */}
+                Tu carrito está vacío.
               </div>
             </SheetContent>
           </Sheet>

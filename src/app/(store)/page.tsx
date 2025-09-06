@@ -1,3 +1,12 @@
+// src/app/(store)/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tienda",
+  description: "Explora palas, zapatillas, bolas y más.",
+  alternates: { canonical: "/" },
+};
+
 export default function StoreHome() {
   return (
     <section className="space-y-2">
@@ -5,7 +14,6 @@ export default function StoreHome() {
       <p className="text-muted-foreground">
         Explora palas, zapatillas, bolas y más.
       </p>
-      {/* Día 4–7: grid de productos RSC */}
     </section>
   );
 }
